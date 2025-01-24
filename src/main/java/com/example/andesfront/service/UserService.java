@@ -12,16 +12,23 @@ import org.springframework.web.client.RestTemplate;
 public class UserService {
 
     @Autowired
-    RestTemplate restTemplate;
+    private RestTemplate restTemplate;
 
     private UserDTO userDTO;
-    private String ruta;
+    private final String API_URL = "http://localhost:9001/auth/login";;
 
     public String signin(UserDTO userDTO) {
-        ruta = "http://localhost:9001/auth/login";
-            ResponseEntity<String> response = restTemplate.postForEntity(ruta, userDTO, String.class);
-            System.out.println(response .getBody());
-            return response.getBody();
+        try {
+
+            ResponseEntity<String> response = restTemplate.postForEntity(API_URL, userDTO, String.class);
+            if(response.getStatusCode().is2xxSuccessful()) {
+                return response.getBody();
+            } else {
+                throw new RuntimeException("Login fallido "+ response.getStatusCode());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error al conectar con la API REST "+ e);
+        }
 
     }
 }

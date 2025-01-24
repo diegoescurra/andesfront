@@ -21,18 +21,12 @@ public class WebSecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/css/**", "/js/**", "/img/**").permitAll()
+                        .requestMatchers("/login", "/loginPost", "/home").permitAll()
                         .anyRequest().authenticated()
-                )
-                .formLogin(form -> form
-                        .loginPage("/login") // Asegúrate de que coincida con tu método controlador
-                        .defaultSuccessUrl("/home", true)
-                        .loginProcessingUrl("/login") // Spring Security manejará el POST/ Página de éxito tras autenticación
-                        .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login") // Redirige a login tras cerrar sesión
+                        .logoutSuccessUrl("/login")
                         .permitAll()
                 );
         return http.build();
